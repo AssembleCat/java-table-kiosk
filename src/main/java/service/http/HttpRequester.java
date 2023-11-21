@@ -13,10 +13,11 @@ import java.nio.charset.StandardCharsets;
 
 public class HttpRequester {
     Gson gson = new Gson();
+    String host = "localhost:8080";
 
-    public <T> T sendGetRequest(String urlString, Type responseType) {
+    public <T> T sendGetRequest(String path, Type responseType) {
         try {
-            URL url = new URL(urlString);
+            URL url = new URL(host + path);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
 
@@ -33,9 +34,9 @@ public class HttpRequester {
         }
     }
 
-    public <T> T sendPostRequest(String urlString, Object requestData, Type responseType) {
+    public <T> T sendPostRequest(String path, Object requestData, Type responseType) {
         try {
-            URL url = new URL(urlString);
+            URL url = new URL(host + path);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
             conn.setRequestMethod("POST");
