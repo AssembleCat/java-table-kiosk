@@ -1,14 +1,18 @@
 package service;
 
+import common.UserAccount;
+import common.master.User;
 import service.admin.AdminService;
+import service.http.HttpRequester;
 import service.order.OrderService;
 
 import java.util.Scanner;
 
 public class MenuService {
     private final Scanner scanner = new Scanner(System.in);
-    private final AdminService adminService = new AdminService();
-    private final OrderService orderService = new OrderService();
+    private final UserAccount account = new UserAccount();
+    private final AdminService adminService = new AdminService(account);
+    private final OrderService orderService = new OrderService(account);
 
     public void run() {
         while (true) {
@@ -22,7 +26,13 @@ public class MenuService {
 
             switch (choice) {
                 case 1 -> orderService.run();
-                case 2 -> adminService.run();
+                case 2 -> {
+                    if(!login()) {
+                        System.out.println("관리자 로그인 실패");
+                        return;
+                    }
+                    adminService.run();
+                }
                 case 3 -> {
                     System.out.println("프로그램을 종료합니다.");
                     return;
@@ -30,6 +40,24 @@ public class MenuService {
                 default -> System.out.println("잘못된 입력입니다. 다시 시도해주세요.");
             }
         }
+    }
+
+    public Boolean login() {
+        System.out.println("<< 관리자 로그인 >>");
+        System.out.print("아이디: ");
+        String id = scanner.next();
+        System.out.print("비밀번호: ");
+        String password = scanner.next();
+
+        HttpRequester requester = new HttpRequester();
+
+        User response = requester.sendGetRequest("/api/manager/login?email=" + id + "&password=" + password, User.class);
+
+        if (response == null) return false;
+
+        account.setUserAccountFromUser(response);
+
+        return true;
     }
 }
 

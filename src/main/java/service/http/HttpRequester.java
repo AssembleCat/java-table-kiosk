@@ -13,7 +13,7 @@ import java.nio.charset.StandardCharsets;
 
 public class HttpRequester {
     Gson gson = new Gson();
-    String host = "localhost:8080";
+    String host = "http://localhost:8080";
 
     public <T> T sendGetRequest(String path, Type responseType) {
         try {

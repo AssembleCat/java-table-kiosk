@@ -1,13 +1,26 @@
 package service.order;
 
+import common.UserAccount;
+
 import java.util.Scanner;
 
 public class OrderService {
     private final Scanner scanner = new Scanner(System.in);
+    private final UserAccount userAccount;
+
+    public OrderService(UserAccount userAccount) {
+        this.userAccount = userAccount;
+    }
 
     public void run() {
         while (true) {
-            System.out.println("<< 주문페이지 >>");
+            if(!userAccount.isUserSet()) {
+                System.out.println("KIOSK의 판매자 정보가 확인되지않았습니다. 관리자에게 문의바랍니다.");
+                return;
+            }
+
+
+            System.out.println("<< 주문페이지(" + userAccount.name + ")>>");
             System.out.println("1. 제품 조회");
             System.out.println("2. 제품 구매");
             System.out.println("3. 현재 장바구니 조회");
