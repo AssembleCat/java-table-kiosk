@@ -1,6 +1,8 @@
 package service.admin;
 
 import common.UserAccount;
+import common.master.product.ProductCreateRequestDto;
+import service.http.HttpRequester;
 
 import java.util.Scanner;
 
@@ -25,9 +27,7 @@ public class AdminService {
             int choice = scanner.nextInt();
 
             switch (choice) {
-                case 1 -> {
-                    // 제품 등록 로직 구현
-                }
+                case 1 -> createProduct();
                 case 2 -> {
                     // 제품 삭제 로직 구현
                 }
@@ -42,6 +42,32 @@ public class AdminService {
                 }
                 default -> System.out.println("잘못된 입력입니다. 다시 시도해주세요.");
             }
+        }
+    }
+
+    private void createProduct() {
+        System.out.println("<< "+ userAccount.name +" 권한 제품 등록 >>");
+        System.out.print("제품명: ");
+        String name = scanner.next();
+        System.out.print("제품명(영문): ");
+        String nameEng = scanner.next();
+        System.out.print("가격: ");
+        int price = scanner.nextInt();
+
+        HttpRequester requester = new HttpRequester();
+        ProductCreateRequestDto createRequest = new ProductCreateRequestDto(
+                userAccount.id,
+                price,
+                name,
+                nameEng
+        );
+
+        boolean response = requester.sendPostRequest("/api/product", createRequest, boolean.class);
+
+        if(!response) {
+            System.out.print("제품등록 실패");
+        } else {
+            System.out.print(name + " 제품등록 성공");
         }
     }
 }

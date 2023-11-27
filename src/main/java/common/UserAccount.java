@@ -3,7 +3,7 @@ package common;
 import common.master.User;
 
 public class UserAccount {
-    int id;
+    public int id;
     public String name;
     public String userEmail;
     public String userPassword;
