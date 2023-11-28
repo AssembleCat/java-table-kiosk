@@ -63,6 +63,35 @@ public class HttpRequester {
         }
     }
 
+    public <T> T sendPutRequest(String path, Object requestData, Type responseType) {
+        try {
+            URL url = new URL(host + path);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+
+            conn.setRequestMethod("PUT");
+            conn.setRequestProperty("Content-Type", "application/json; utf-8");
+            conn.setRequestProperty("Accept", "application/json");
+            conn.setDoOutput(true);
+
+            String jsonInputString = gson.toJson(requestData);
+
+            OutputStreamWriter writer = new OutputStreamWriter(conn.getOutputStream(), StandardCharsets.UTF_8);
+            writer.write(jsonInputString);
+            writer.close();
+
+            int responseCode = conn.getResponseCode();
+            if (responseCode == HttpURLConnection.HTTP_OK) {
+                return getResponseBody(responseType, conn);
+            } else {
+                System.out.println("POST request not worked");
+                return null;
+            }
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+            return null;
+        }
+    }
+
     private <T> T getResponseBody(Type responseType, HttpURLConnection conn) throws IOException {
         BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
         String inputLine;
