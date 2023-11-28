@@ -1,7 +1,8 @@
 package service.admin;
 
 import common.UserAccount;
-import common.master.product.ProductCreateRequestDto;
+import common.master.model.dto.product.ProductCreateRequestDto;
+import common.master.model.dto.product.ProductQueryResponseDto;
 import service.http.HttpRequester;
 
 import java.util.Scanner;
@@ -28,15 +29,9 @@ public class AdminService {
 
             switch (choice) {
                 case 1 -> createProduct();
-                case 2 -> {
-                    // 제품 삭제 로직 구현
-                }
-                case 3 -> {
-                    // 제품 수정 로직 구현
-                }
-                case 4 -> {
-                    // 매출 조회 로직 구현
-                }
+                case 2 -> deleteProduct();
+                case 3 -> updateProduct();
+                case 4 -> querySales();
                 case 5 -> {
                     return;
                 }
@@ -46,7 +41,7 @@ public class AdminService {
     }
 
     private void createProduct() {
-        System.out.println("<< "+ userAccount.name +" 권한 제품 등록 >>");
+        System.out.println("<< " + userAccount.name + " 권한 제품 등록 >>");
         System.out.print("제품명: ");
         String name = scanner.next();
         System.out.print("제품명(영문): ");
@@ -64,10 +59,25 @@ public class AdminService {
 
         boolean response = requester.sendPostRequest("/api/product", createRequest, boolean.class);
 
-        if(!response) {
+        if (!response) {
             System.out.print("제품등록 실패");
         } else {
             System.out.print(name + " 제품등록 성공");
         }
+    }
+
+    private void deleteProduct() {
+    }
+
+    private void updateProduct() {
+        ProductQueryResponseDto managedProduct =
+                new HttpRequester().sendGetRequest("/api/product/" + userAccount.id, ProductQueryResponseDto.class);
+
+        for (ProductQueryResponseDto.Product product : managedProduct.products) {
+            System.out.println(product.id + ". " + product.name + "(" + product.price + "원)");
+        }
+    }
+
+    private void querySales() {
     }
 }

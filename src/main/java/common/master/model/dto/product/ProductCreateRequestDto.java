@@ -1,4 +1,4 @@
-package common.master.product;
+package common.master.model.dto.product;
 
 public class ProductCreateRequestDto {
     private int managerId;
