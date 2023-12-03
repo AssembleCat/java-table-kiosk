@@ -73,8 +73,33 @@ public class AdminService {
         ProductQueryResponseDto managedProduct =
                 new HttpRequester().sendGetRequest("/api/product/" + userAccount.id, ProductQueryResponseDto.class);
 
-        for (ProductQueryResponseDto.Product product : managedProduct.products) {
-            System.out.println(product.id + ". " + product.name + "(" + product.price + "원)");
+        if (managedProduct == null || managedProduct.products.isEmpty()) {
+            System.out.println("등록된 제품이 없습니다.");
+            return;
+        }
+
+        while (true) {
+            for (ProductQueryResponseDto.Product product : managedProduct.products)
+                System.out.println(product.id + ". " + product.name + "(" + product.nameEng + "): " + product.price + "원");
+
+            System.out.println("수정을 원하는 제품의 번호를 입력하세요. (문자 입력시 관리자모드 복귀): ");
+
+            int requestId = scanner.nextInt();
+
+            ProductQueryResponseDto.Product matchingProduct = managedProduct.products.stream()
+                    .filter(product -> product.id == requestId)
+                    .findFirst()
+                    .orElse(null);
+
+            if (matchingProduct == null) {
+                System.out.println("해당 번호의 제품이 없습니다.");
+                return;
+            }
+
+            System.out.println("<< 제품 수정 >> ");
+            System.out.println("1. 미사용 처리");
+            System.out.println("2. 가격 변경");
+            System.out.println("3. 제품명 변경");
         }
     }
 

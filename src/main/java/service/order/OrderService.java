@@ -1,6 +1,8 @@
 package service.order;
 
 import common.UserAccount;
+import common.master.model.dto.product.ProductQueryResponseDto;
+import service.http.HttpRequester;
 
 import java.util.Scanner;
 
@@ -22,35 +24,56 @@ public class OrderService {
 
             System.out.println("<< 주문페이지(" + userAccount.name + ")>>");
             System.out.println("1. 제품 조회");
-            System.out.println("2. 제품 구매");
-            System.out.println("3. 현재 장바구니 조회");
-            System.out.println("4. 구매 확정");
-            System.out.println("5. 메인 메뉴로 돌아가기");
+            System.out.println("2. 현재 장바구니 조회");
+            System.out.println("3. 구매 확정");
+            System.out.println("4. 메인 메뉴로 돌아가기");
             System.out.println("** 작업을 선택하세요 →");
 
             int choice = scanner.nextInt();
 
             switch (choice) {
                 case 1 -> {
-                    // 제품 조회 로직 구현
+                    viewProduct();
                 }
                 case 2 -> {
-                    // 제품 구매 로직 구현
-                    System.out.println("구매하실 제품명을 입력하세요.");
-                    String productName = scanner.next();
+                    viewBasket();
                 }
                 case 3 -> {
-                    // 현재 장바구니 조회 로직 구현
+                    paymentConfirm();
+                    return;
                 }
                 case 4 -> {
-                    // 구매 확정 로직 구현
-                }
-                case 5 -> {
+                    // 메인메뉴로 돌아가기
                     return;
                 }
                 default -> System.out.println("잘못된 입력입니다. 다시 시도해주세요.");
             }
         }
+    }
+
+    private void viewProduct() {
+        ProductQueryResponseDto managedProduct =
+                new HttpRequester().sendGetRequest("/api/product/" + userAccount.id, ProductQueryResponseDto.class);
+
+        if (managedProduct == null || managedProduct.products.isEmpty()) {
+            System.out.println("등록된 제품이 없습니다.");
+            return;
+        }
+
+        for (ProductQueryResponseDto.Product product : managedProduct.products)
+            System.out.println(product.id + ". " + product.name + "(" + product.nameEng + "): " + product.price + "원");
+
+        System.out.println("구매를 원하는 품목의 번호를 입력하세요.");
+
+
+    }
+
+    private void viewBasket() {
+
+    }
+
+    private void paymentConfirm() {
+
     }
 }
 
