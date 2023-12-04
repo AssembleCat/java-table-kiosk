@@ -36,12 +36,8 @@ public class OrderService {
             int choice = scanner.nextInt();
 
             switch (choice) {
-                case 1 -> {
-                    viewProduct();
-                }
-                case 2 -> {
-                    sales.viewBasket();
-                }
+                case 1 -> viewProduct();
+                case 2 -> sales.viewBasket();
                 case 3 -> {
                     paymentConfirm();
                     return;
@@ -93,6 +89,11 @@ public class OrderService {
     }
 
     private void paymentConfirm() {
+        if(sales.saleProduct.isEmpty()) {
+            System.out.println("장바구니가 비어있습니다. 제품을 선택 후 결제바랍니다.");
+            return;
+        }
+
         sales.confirmSales();
 
         HttpRequester requester = new HttpRequester();
