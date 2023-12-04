@@ -105,9 +105,14 @@ public class AdminService {
 
         SaleHeaderList response = requester.sendGetRequest("/api/payment?" + userAccount.id, SaleHeaderList.class);
 
+        int totAmount = 0;
         System.out.println("<< 판매내역 조회 >>");
         for (SaleHeaderList.SaleHeader header : response.headers) {
-            System.out.println(header.id + ". 판매금액: " + header.totalPrice + " 판매시각: " + header.saleDttm);
+            totAmount += header.totalPrice;
+            System.out.println(header.id + ". 판매금액: " + header.totalPrice + "판매개수: "+ header.totalQty + " 판매시각: " + header.saleDttm);
         }
+
+        System.out.println("총 판매내역: " + response.headers.size() + "건");
+        System.out.println("총 판매금액: " + totAmount + " 원");
     }
 }
