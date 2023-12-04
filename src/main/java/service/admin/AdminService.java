@@ -66,8 +66,7 @@ public class AdminService {
         }
     }
 
-    private void deleteProduct() {
-    }
+    private void deleteProduct() {}
 
     private void updateProduct() {
         ProductQueryResponseDto managedProduct =
@@ -103,6 +102,5 @@ public class AdminService {
         }
     }
 
-    private void querySales() {
-    }
+    private void querySales() {}
 }
