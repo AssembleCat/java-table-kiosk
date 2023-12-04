@@ -3,6 +3,7 @@ package service.admin;
 import common.UserAccount;
 import common.master.model.dto.product.ProductCreateRequestDto;
 import common.master.model.dto.product.ProductQueryResponseDto;
+import common.master.model.dto.sale.SaleHeaderList;
 import service.http.HttpRequester;
 
 import java.util.Scanner;
@@ -19,20 +20,18 @@ public class AdminService {
         while (true) {
             System.out.println("<< 관리자 모드(" + userAccount.name + ") >>");
             System.out.println("1. 제품 등록");
-            System.out.println("2. 제품 삭제");
-            System.out.println("3. 제품 수정");
-            System.out.println("4. 매출 조회");
-            System.out.println("5. 메인으로 돌아가기");
+            System.out.println("2. 제품 수정");
+            System.out.println("3. 매출 조회");
+            System.out.println("4. 메인으로 돌아가기");
             System.out.println("** 작업을 선택하세요 →");
 
             int choice = scanner.nextInt();
 
             switch (choice) {
                 case 1 -> createProduct();
-                case 2 -> deleteProduct();
-                case 3 -> updateProduct();
-                case 4 -> querySales();
-                case 5 -> {
+                case 2 -> updateProduct();
+                case 3 -> querySales();
+                case 4 -> {
                     return;
                 }
                 default -> System.out.println("잘못된 입력입니다. 다시 시도해주세요.");
@@ -66,7 +65,6 @@ public class AdminService {
         }
     }
 
-    private void deleteProduct() {}
 
     private void updateProduct() {
         ProductQueryResponseDto managedProduct =
@@ -102,5 +100,14 @@ public class AdminService {
         }
     }
 
-    private void querySales() {}
+    private void querySales() {
+        HttpRequester requester = new HttpRequester();
+
+        SaleHeaderList response = requester.sendGetRequest("/api/payment?" + userAccount.id, SaleHeaderList.class);
+
+        System.out.println("<< 판매내역 조회 >>");
+        for (SaleHeaderList.SaleHeader header : response.headers) {
+            System.out.println(header.id + ". 판매금액: " + header.totalPrice + " 판매시각: " + header.saleDttm);
+        }
+    }
 }

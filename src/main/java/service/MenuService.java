@@ -27,7 +27,7 @@ public class MenuService {
             switch (choice) {
                 case 1 -> orderService.run();
                 case 2 -> {
-                    if(!login()) {
+                    if (!login()) {
                         System.out.println("관리자 로그인 실패");
                         return;
                     }
