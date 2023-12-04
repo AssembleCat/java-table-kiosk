@@ -29,6 +29,8 @@ public class SaleCreateRequestDto {
     }
 
     public void clearSales(int managerId) {
+        System.out.println("장바구니가 초기화됩니다.");
+
         this.saleProduct = new ArrayList<>();
         this.managerId = managerId;
     }
