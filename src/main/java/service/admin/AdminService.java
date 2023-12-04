@@ -79,9 +79,11 @@ public class AdminService {
             for (ProductQueryResponseDto.Product product : managedProduct.products)
                 System.out.println(product.id + ". " + product.name + "(" + product.nameEng + "): " + product.price + "원");
 
-            System.out.println("수정을 원하는 제품의 번호를 입력하세요. (문자 입력시 관리자모드 복귀): ");
+            System.out.println("수정을 원하는 제품의 번호를 입력하세요. (-1 입력시 관리자모드 복귀): ");
 
             int requestId = scanner.nextInt();
+
+            if(requestId == -1) return;
 
             ProductQueryResponseDto.Product matchingProduct = managedProduct.products.stream()
                     .filter(product -> product.id == requestId)
@@ -103,13 +105,13 @@ public class AdminService {
     private void querySales() {
         HttpRequester requester = new HttpRequester();
 
-        SaleHeaderList response = requester.sendGetRequest("/api/payment?" + userAccount.id, SaleHeaderList.class);
+        SaleHeaderList response = requester.sendGetRequest("/api/payment?managerId=" + userAccount.id, SaleHeaderList.class);
 
         int totAmount = 0;
         System.out.println("<< 판매내역 조회 >>");
         for (SaleHeaderList.SaleHeader header : response.headers) {
             totAmount += header.totalPrice;
-            System.out.println(header.id + ". 판매금액: " + header.totalPrice + "판매개수: "+ header.totalQty + " 판매시각: " + header.saleDttm);
+            System.out.println(header.id + ". 판매금액: " + header.totalPrice + "원, " + "판매개수: "+ header.totalQty + " 건, " + " 판매시각: " + header.saleDttm);
         }
 
         System.out.println("총 판매내역: " + response.headers.size() + "건");
